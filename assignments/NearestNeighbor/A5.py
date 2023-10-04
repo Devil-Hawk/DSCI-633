@@ -9,7 +9,7 @@ if __name__ == "__main__":
     X = data_train[independent]
     y = data_train["Species"]
     # Train model
-    clf = my_KNN()
+    clf = my_KNN()                                                      #This uses minkowski as default, use: metric="minkowski","manhattan","cosine"or "euclidean" for using a particular method
     clf.fit(X,y)
     # Load testing data
     data_test = pd.read_csv("../data/Iris_test.csv")
