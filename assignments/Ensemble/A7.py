@@ -7,7 +7,7 @@ if __name__ == "__main__":
     #  Load training data
     data_train = pd.read_csv("../data/Iris_train.csv")
     # Separate independent variables and dependent variables
-    independent = ["SepalLengthCm",	"SepalWidthCm",	"PetalLengthCm",	"PetalWidthCm"]
+    independent = ["SepalLengthCm",	"SepalWidthCm",	"PetalLengthCm", "PetalWidthCm"]
     X = data_train[independent]
     y = data_train["Species"]
     # Train model
