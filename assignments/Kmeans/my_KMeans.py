@@ -10,29 +10,23 @@ class my_KMeans:
         self.n_init = n_init
         self.max_iter = int(max_iter)
         self.tol = tol
-
         self.classes_ = range(n_clusters)
-        # Centroids
         self.cluster_centers_ = None
-        # Sum of squared distances of samples to their closest cluster center.
         self.inertia_ = None
 
     def dist(self, a, b):
-        # Compute Euclidean distance between a and b
+        # Computing Euclidean distance between a and b
         return np.sum((np.array(a) - np.array(b)) ** 2) ** (0.5)
 
     def initiate(self, X):
         # Initiate cluster centers
         # Input X is numpy.array
         # Output cluster_centers (list)
-
         if self.init == "random":
-            # Randomly initialize cluster centers
             indices = np.random.choice(len(X), self.n_clusters, replace=False)
             cluster_centers = [X[i] for i in indices]
 
         elif self.init == "k-means++":
-            # K-Means++ initialization
             cluster_centers = [X[np.random.choice(len(X))]
                               ]  # Initialize the first center randomly
             for _ in range(1, self.n_clusters):
@@ -57,9 +51,6 @@ class my_KMeans:
         # Output: cluster_centers (list), inertia
         cluster_centers = self.initiate(X)
         last_inertia = None
-
-
-        # Iterating over
         for i in range(self.max_iter + 1):
             # Assign each training data point to its nearest cluster_centers
             clusters = [[] for i in range(self.n_clusters)]
