@@ -17,7 +17,6 @@ if __name__ == "__main__":
     print("Centroids:")
     print(clf.cluster_centers_)
     print("Inertia: %f" %clf.inertia_)
-
     # Load testing data
     data_test = pd.read_csv("../data/Iris_test.csv")
     X_test = data_test[independent]
