@@ -1,9 +1,10 @@
 import numpy as np
 from scipy.linalg import svd
-
+from copy import deepcopy
+from collections import Counter
 
 class my_normalizer:
-    def __init__(self, norm="Min-Max", axis = 1):
+    def __init__(self, norm="Min-Max", axis=1):
         #     norm = {"L1", "L2", "Min-Max", "Standard_Score"}
         #     axis = 0: normalize rows
         #     axis = 1: normalize columns
@@ -13,21 +14,64 @@ class my_normalizer:
     def fit(self, X):
         #     X: input matrix
         #     Calculate offsets and scalers which are used in transform()
-        X_array  = np.asarray(X)
-        # Write your own code below
+        X_array = np.asarray(X)
+        m, n = X_array.shape
+        self.offsets = []
+        self.scalers = []
+        if self.axis == 1:
+            for col in range(n):
+                offset, scaler = self.vector_norm(X_array[:, col])
+                self.offsets.append(offset)
+                self.scalers.append(scaler)
+        elif self.axis == 0:
+            for row in range(m):
+                offset, scaler = self.vector_norm(X_array[row])
+                self.offsets.append(offset)
+                self.scalers.append(scaler)
+        else:
+            raise Exception("Unknown axis.")
 
     def transform(self, X):
-        # Transform X into X_norm
         X_norm = deepcopy(np.asarray(X))
-        # Write your own code below
+        m, n = X_norm.shape
+        if self.axis == 1:
+            for col in range(n):
+                X_norm[:, col] = (X_norm[:, col] - self.offsets[col]) / self.scalers[col]
+        elif self.axis == 0:
+            for row in range(m):
+                X_norm[row] = (X_norm[row] - self.offsets[row]) / self.scalers[row]
+        else:
+            raise Exception("Unknown axis.")
         return X_norm
 
     def fit_transform(self, X):
         self.fit(X)
         return self.transform(X)
 
+    def vector_norm(self, x):
+        # Calculate the offset and scaler for the input vector x
+        if self.norm == "Min-Max":
+            #Write your own code below
+            offset = np.min(x)
+            scaler = np.max(x) - offset
+        elif self.norm == "L1":
+            # Write your own code below
+            offset = np.sum(np.abs(x)) / len(x)
+            scaler = np.max(x) - np.min(x)
+        elif self.norm == "L2":
+            # Write your own code below
+            offset = np.sqrt(np.sum(x ** 2)) / len(x)
+            scaler = np.max(x) - np.min(x)
+        elif self.norm == "Standard_Score":
+            # Write your own code below
+            offset = np.mean(x)
+            scaler = np.std(x)
+        else:
+            raise Exception("Unknown normalization.")
+        return offset, scaler
+
 class my_pca:
-    def __init__(self, n_components = 5):
+    def __init__(self, n_components=5):
         #     n_components: number of principal components to keep
         self.n_components = n_components
 
@@ -37,24 +81,23 @@ class my_pca:
         #     X: input matrix
         #  Calculates:
         #     self.principal_components: the top n_components principal_components
-        # Vh = the transpose of V
+        #  Vh = the transpose of V
         U, s, Vh = svd(X)
         # Write your own code below
+        self.principal_components = Vh[:self.n_components, :]
 
     def transform(self, X):
         #     X_pca = X.dot(self.principal_components)
         X_array = np.asarray(X)
-        # Write your own code below
-
-        return X_pca
+        return X_array.dot(self.principal_components.T)
 
     def fit_transform(self, X):
         self.fit(X)
         return self.transform(X)
 
-def stratified_sampling(y, ratio, replace = True):
+def stratified_sampling(y, ratio, replace=True):
     #  Inputs:
-    #     y: class labels
+    #     y: a 1-d array of class labels
     #     0 < ratio < 1: len(sample) = len(y) * ratio
     #     replace = True: sample with replacement
     #     replace = False: sample without replacement
@@ -63,10 +106,23 @@ def stratified_sampling(y, ratio, replace = True):
     #             (ratio is the same across each class,
     #             samples for each class = int(np.ceil(ratio * # data in each class)) )
 
-    if ratio<=0 or ratio>=1:
+    if ratio <= 0 or ratio >= 1:
         raise Exception("ratio must be 0 < ratio < 1.")
     y_array = np.asarray(y)
     # Write your own code below
+    # getting count values as dictionary
+    counts = np.array(list(Counter(y_array).values()))
 
+    # calculating the number of samples per class
+    samples_per_class = np.ceil(counts * ratio).astype(int)
 
-    return sample.astype(int)
+    # initializing empty list to store sampled indices
+    sample_indices = []
+
+    # Iterate over unique labels and sample indices for each class
+    for label, count in zip(Counter(y_array).keys(), samples_per_class):
+        indices = np.where(y_array == label)[0]
+        sampled_indices = np.random.choice(indices, size=count, replace=replace)
+        sample_indices.extend(sampled_indices)
+
+    return np.array(sample_indices).astype(int)

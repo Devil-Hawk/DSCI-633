@@ -12,7 +12,7 @@ if __name__ == "__main__":
     independent = ["SepalLengthCm", "SepalWidthCm", "PetalLengthCm", "PetalWidthCm"]
     X = data_train[independent]
     y = data_train["Species"]
-    # Preprocess (train)
+    # Preprocessing (train)
     normalizer = my_preprocess.my_normalizer(norm="L2", axis=1)
     X_norm = normalizer.fit_transform(X)
     pca = my_preprocess.my_pca(n_components=2)
