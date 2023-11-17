@@ -4,8 +4,8 @@ from sklearn.tree import DecisionTreeClassifier
 ####### import my_evaluation#######
 import sys
 sys.path.insert(0, '../..')
-from assignments.Evaluation.my_evaluation import my_evaluation                 #Relative File path not working for me(please check email i sent to you)
-#from my_evaluation import my_evaluation                                       #To fix that: I Replaced it with a copy of my_evaluation.py in this directory itself
+#from assignments.Evaluation.my_evaluation import my_evaluation                 #Relative File path not working for me(please check email i sent to you)
+from my_evaluation import my_evaluation                                       #To fix that: I Replaced it with a copy of my_evaluation.py in this directory itself
 
 ##################################################
 
