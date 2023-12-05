@@ -5,7 +5,8 @@ from sklearn.model_selection import train_test_split
 from pdb import set_trace
 from project import my_model
 sys.path.insert(0, '../..')
-from assignments.assignment8.my_evaluation import my_evaluation
+# from assignments.Evaluation.my_evaluation import my_evaluation        //This is not working in my computer so I put the code of my_evaluation.py in the project folder.
+from my_evaluation import my_evaluation     #I also kept the my_evaluation.py file in the same folder because of the same problem
 
 def test(data):
     y = data["fraudulent"]
